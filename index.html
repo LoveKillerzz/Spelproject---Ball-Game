@@ -6,7 +6,7 @@
     <meta name="description" content="Spel i JS">
     <meta name="author" content="Stina TEINF21">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lobster+Two&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
         var ball =
         {
             x: canvas.width / 2,
-            y: canvas.height - 30,
+            y: 100,
             radius: 18,
             color: "midnightblue",
             speedX: 2,
@@ -42,7 +42,8 @@
             y: canvas.height - 20,
             width: 60,
             height: 10,
-            color: "tan"
+            color: "tan",
+            speedX: 3
         };
 
         var leftPressed = false;
@@ -82,6 +83,8 @@
 
            function drawBasket()
            {
+                basket.x += (leftPressed ? basket.speedX* -1 : 0) + (rightPressed ? basket.speedX : 0);
+
                 ctx.beginPath();
                 ctx.rect(basket.x, basket.y, basket.width, basket.height);
                 ctx.fillStyle = basket.color;
@@ -98,7 +101,7 @@
 
            function drawGameOver()
            {
-                ctx.font = "20px lobster two";
+                ctx.font = "45px lobster two";
                 ctx.fillStyle = "red";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
@@ -134,8 +137,10 @@
                 // Kollision med korgen
                 if (ball.y + ball.radius > basket.y && ball.x > basket.x && ball.x < basket.x + basket.width)
                 {
-                    ball.speedY = -ball.speedY;
-                    score; // Öka poängen vid varje träff
+                    ball.speedY = -ball.speedY - 1;
+                    ball.speedX += (ball.speedX > 0 ? 1 : -1);
+                    basket.speedX += 1;
+                    score++; // Öka poängen vid varje träff
                 }
 
                 else if (ball.y + ball.speedY > canvas.height - ball.radius)
@@ -179,32 +184,33 @@
 
            function keyDownHandler(e)
            {
-                if (e.key === "Left" || e.key === "ArrowLeft")
+                if (e.keyCode === 37)
                 {
                     leftPressed = true;
                 }
 
-                else if (e.key === "Right" || e.key === "ArrowRight")
+                if (e.keyCode === 39)
                 {
                     rightPressed = true;
                 }
-           }
+            }
 
            function keyUpHandler(e)
            {
-                if (e.key === "Left" || e.key === "ArrowLeft")
+                if (e.keyCode === 37)
                 {
                     leftPressed = false;
                 }
 
-                else if (e.key === "Right" || e.key === "ArrowRight")
+                if (e.keyCode === 39)
                 {
                     rightPressed = false;
                 }
+
            }
 
-           document.addEventListener("keydown", keyDownHandler, false);
-           document.addEventListener("keyup", keyUpHandler, false);
+           document.addEventListener("keydown", keyDownHandler);
+           document.addEventListener("keyup", keyUpHandler);
 
     </script>
 
